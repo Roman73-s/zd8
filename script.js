@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var fioInput = document.getElementById('fio');
   var phoneInput = document.getElementById('phone');
 
-  // 1. Фильтрация ввода (запрещаем цифры в ФИО и буквы в телефоне)
+  // 1. Фильтрация ввода (защита от цифр и букв)
   fioInput.addEventListener('input', function() {
     this.value = this.value.replace(/[^А-Яа-яЁёA-Za-z\s\-]/g, '');
   });
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     this.value = this.value.replace(/[^\d+\(\)\s\-]/g, '');
   });
 
-  // 2. Открытие/закрытие модалки (History API)
+  // 2. History API (Открытие и закрытие)
   openBtn.addEventListener('click', function() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // 3. LocalStorage (Сохранение введенных данных)
+  // 3. LocalStorage
   var inputs = form.querySelectorAll('input, textarea');
   inputs.forEach(function(input) {
     var savedValue = localStorage.getItem('feedback_' + input.name);
@@ -65,41 +65,47 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 4. Отправка формы (Имитация через fetch)
+  // 4. Отправка на сервер (Используем тестовый API)
   form.addEventListener('submit', function (e) {
-    e.preventDefault(); // Отменяем перезагрузку страницы
+    e.preventDefault(); // Без перезагрузки страницы
     
     submitBtn.disabled = true;
     submitBtn.textContent = 'Отправка...';
-    statusDiv.textContent = '';
+    statusDiv.textContent = 'Отправка на сервер...';
+    statusDiv.style.color = '#dcdcdc';
     
-    // Собираем данные из формы (чтобы показать, что мы умеем это делать)
+    // Собираем данные формы в объект
     var formData = new FormData(form);
-    console.log('Данные для отправки:', Object.fromEntries(formData));
+    var dataObject = Object.fromEntries(formData.entries());
 
-    // ИМИТАЦИЯ СЕТЕВОГО ЗАПРОСА (чтобы не было ошибок с Formcarry)
-    // Мы просто ждем 1 секунду и говорим "Успешно"
-    var fakeFetch = new Promise(function(resolve, reject) {
-      setTimeout(function() {
-        resolve({ ok: true, message: 'Успешно' });
-      }, 1000);
-    });
-
-    fakeFetch
-    .then(function(response) {
-      if (response.ok) {
-        statusDiv.textContent = 'Сообщение успешно отправлено!';
-        statusDiv.style.color = '#4caf50';
-        
-        // Очищаем форму и LocalStorage
-        form.reset();
-        inputs.forEach(function(input) {
-          localStorage.removeItem('feedback_' + input.name);
-        });
+    // Делаем настоящий запрос (JSONPlaceholder - тестовый сервер, который всегда отвечает 200 OK)
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      body: JSON.stringify(dataObject),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
       }
     })
+    .then(function(response) {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Ошибка сервера');
+    })
+    .then(function(data) {
+      // Если всё ок
+      statusDiv.textContent = 'Сообщение успешно отправлено!';
+      statusDiv.style.color = '#4caf50';
+      
+      // Очищаем форму и LocalStorage
+      form.reset();
+      inputs.forEach(function(input) {
+        localStorage.removeItem('feedback_' + input.name);
+      });
+    })
     .catch(function(error) {
-      statusDiv.textContent = 'Ошибка отправки.';
+      // Если ошибка
+      statusDiv.textContent = 'Ошибка отправки. Попробуйте позже.';
       statusDiv.style.color = '#ff4d4d';
     })
     .finally(function() {
