@@ -1,4 +1,34 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #1e1e1e;
+  color: #dcdcdc;
+  line-height: 1.5;
+}
 
+/* Шапка */
+.site-header {
+  width: 100%;
+  background: #7a1f1f;
+  color: #f0f0f0;
+}
+
+.site-header h1 {
+  color: #f0f0f0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Логотип (уменьшаем его!) */
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  object-fit: contain; /* Чтобы картинка не искажалась */
+}
+
+/* ===== Стили для модального окна (ЛР8) ===== */
 .modal-overlay {
   display: none; /* Скрыто по умолчанию */
   position: fixed;
@@ -23,6 +53,7 @@
   background: #2a2a2a;
   border: 1px solid #7a1f1f;
   box-shadow: 0 0 20px rgba(122, 31, 31, 0.5);
+  padding: 20px;
 }
 
 .close-btn {
@@ -38,16 +69,26 @@
   color: #fff;
 }
 
-/* Мобильная адаптация формы */
+/* Цвета для формы */
+.form-control {
+  background: #1a1a1a;
+  color: #dcdcdc;
+  border: 1px solid #555;
+}
+
+.form-control:focus {
+  background: #1a1a1a;
+  color: #dcdcdc;
+  border-color: #a02a2a;
+  box-shadow: 0 0 0 0.2rem rgba(160, 42, 42, 0.4);
+}
+
+/* Мобильная адаптация */
 @media (max-width: 768px) {
   .modal-content {
-    padding: 10px;
+    padding: 15px;
   }
   .modal-content h2 {
-    font-size: 18px;
-  }
-  .form-control {
-    font-size: 14px;
-    padding: 6px;
+    font-size: 20px;
   }
 }
