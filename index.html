@@ -27,17 +27,19 @@
     <button id="open-feedback" class="btn btn-danger btn-lg">Связаться с нами</button>
   </main>
 
+  <!-- Модальное окно -->
   <div id="feedback-modal" class="modal-overlay">
     <div class="modal-content block">
       <span id="close-feedback" class="close-btn">&times;</span>
       <h2>Обратная связь</h2>
       
       <form id="feedback-form" class="mt-3">
+        <!-- Твой ключ от Web3Forms -->
+        <input type="hidden" name="access_key" value="ed6d07ac-1ccc-4c33">
+        
         <div class="form-group">
           <label for="fio">ФИО:</label>
-          <input type="text" id="fio" name="fio" class="form-control" 
-                 pattern="^[A-Za-zА-Яа-яЁё\s\-]+$" 
-                 title="Только буквы, пробелы и дефисы" required>
+          <input type="text" id="fio" name="fio" class="form-control" pattern="^[A-Za-zА-Яа-яЁё\s\-]+$" title="Только буквы" required>
         </div>
         <div class="form-group">
           <label for="email">Email:</label>
@@ -45,9 +47,7 @@
         </div>
         <div class="form-group">
           <label for="phone">Телефон:</label>
-          <input type="tel" id="phone" name="phone" class="form-control" 
-                 pattern="^[\d+\(\)\s\-]{10,}$" 
-                 title="Только цифры, +, -, (, ), пробел" required>
+          <input type="tel" id="phone" name="phone" class="form-control" pattern="^[\d+\(\)\s\-]{10,}$" title="Только цифры и знаки (мин. 10 символов)" required>
         </div>
         <div class="form-group">
           <label for="org">Организация:</label>
