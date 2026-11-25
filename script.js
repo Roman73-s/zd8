@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var fioInput = document.getElementById('fio');
   var phoneInput = document.getElementById('phone');
 
-  // 1. Фильтрация ввода (защита от цифр и букв)
+  // 1. Фильтрация ввода
   fioInput.addEventListener('input', function() {
     this.value = this.value.replace(/[^А-Яа-яЁёA-Za-z\s\-]/g, '');
   });
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     this.value = this.value.replace(/[^\d+\(\)\s\-]/g, '');
   });
 
-  // 2. History API (Открытие и закрытие)
+  // 2. History API
   openBtn.addEventListener('click', function() {
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -65,46 +65,35 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 4. Отправка на сервер (Используем тестовый API)
+  // 4. Отправка на Web3Forms
   form.addEventListener('submit', function (e) {
-    e.preventDefault(); // Без перезагрузки страницы
+    e.preventDefault();
     
     submitBtn.disabled = true;
     submitBtn.textContent = 'Отправка...';
     statusDiv.textContent = 'Отправка на сервер...';
     statusDiv.style.color = '#dcdcdc';
     
-    // Собираем данные формы в объект
     var formData = new FormData(form);
-    var dataObject = Object.fromEntries(formData.entries());
 
-    // Делаем настоящий запрос (JSONPlaceholder - тестовый сервер, который всегда отвечает 200 OK)
-    fetch('https://jsonplaceholder.typicode.com/posts', {
+    fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      body: JSON.stringify(dataObject),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      }
+      body: formData
     })
     .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      }
+      if (response.ok) return response.json();
       throw new Error('Ошибка сервера');
     })
     .then(function(data) {
-      // Если всё ок
       statusDiv.textContent = 'Сообщение успешно отправлено!';
       statusDiv.style.color = '#4caf50';
       
-      // Очищаем форму и LocalStorage
       form.reset();
       inputs.forEach(function(input) {
         localStorage.removeItem('feedback_' + input.name);
       });
     })
     .catch(function(error) {
-      // Если ошибка
       statusDiv.textContent = 'Ошибка отправки. Попробуйте позже.';
       statusDiv.style.color = '#ff4d4d';
     })
